@@ -1,0 +1,13 @@
+name: CI
+on: push
+
+jobs:
+  ci:
+    name: CI
+    runs-on: windows-latest
+    steps:
+      - name: Echo with \n
+        shell: bash
+        run: |
+          echo "abc\ndef"
+          echo $SHELL
