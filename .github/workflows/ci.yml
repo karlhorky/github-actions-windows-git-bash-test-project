@@ -10,5 +10,6 @@ jobs:
         shell: bash
         run: |
           echo "abc\ndef"
-          printf "abc\ndef"
+          echo -e "abc\ndef"
+          # printf "abc\ndef"
           echo $SHELL
