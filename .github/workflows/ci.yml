@@ -14,3 +14,5 @@ jobs:
           # printf "abc\ndef"
           echo $SHELL
           curl --location --remote-name https://raw.githubusercontent.com/upleveled/expo-example-winter-2025-eu/main/metroRequire.d.ts
+          ls -al
+          cat metroRequire.d.ts
