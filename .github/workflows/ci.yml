@@ -48,12 +48,16 @@ jobs:
             "LOCALAPPDATA=${LOCALAPPDATA:-}" \
             "uname -s=$(uname -s)" \
             "uname -a=$(uname -a)"
+          printf 'bash path: %s\n' "$(command -v bash)"
+          bash --version
+          type -a bash || true
 
           # Detector: true on Git Bash/MSYS
           if [ "${OS:-}" = "Windows_NT" ] \
-            && [ "${OSTYPE:-}" = "msys" ] \
+            && printf '%s' "${OSTYPE:-}" | grep --ignore-case --extended-regexp --quiet '^msys' \
             && [ -n "${MSYSTEM:-}" ] \
-            && uname -s | grep --ignore-case --extended-regexp --quiet '^(MINGW|MSYS)_NT'
+            && command -v cygpath >/dev/null 2>&1 \
+            && uname -s | grep --ignore-case --extended-regexp --quiet '^(MSYS|MINGW)[0-9]*_NT'
           then
             printf 'Detector: ✅ Git Bash detected\n'
           else
@@ -81,9 +85,9 @@ jobs:
         shell: bash
         run: |
           echo "abc\ndef"
-          echo -- "-e is not portable; prefer printf"
-          printf 'abc\ndef\n'
-          printf 'SHELL=%s\n' "${SHELL:-}"
+          echo -e "abc\ndef"
+          # printf "abc\ndef"
+          echo $SHELL
           curl --location --remote-name https://raw.githubusercontent.com/upleveled/expo-example-winter-2025-eu/main/metroRequire.d.ts
-          ls --all --long
+          ls -al
           cat metroRequire.d.ts
