@@ -84,6 +84,11 @@ jobs:
           # printf '=== After ===\n'
           # cat "$rc"
 
+          printf '=== debugging ===\n'
+          ls "$LOCALAPPDATA/pnpm/config/rc"
+          cat "$LOCALAPPDATA/pnpm/config/rc"
+
+          printf '=== perl ===\n'
           perl -i -ne 'print; $exists ||= /^minimum-release-age-exclude\[\]=eslint-config-upleveled\r?$/; END { print "minimum-release-age-exclude[]=eslint-config-upleveled\n" unless $exists }' "$LOCALAPPDATA/pnpm/config/rc"
 
           printf '=== After writing ===\n'
