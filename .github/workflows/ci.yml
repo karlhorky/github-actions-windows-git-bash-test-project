@@ -35,7 +35,7 @@ jobs:
           Write-Host "=== After ==="
           Get-Content $rc | ForEach-Object { Write-Host $_ }
 
-      - name: Bash (Git Bash) — show env + edit pnpm rc
+      - name: Bash (Git Bash) — show env
         shell: bash
         run: |
           printf '=== Git Bash env probe ===\n'
@@ -64,22 +64,30 @@ jobs:
             printf 'Detector: ❌ Not Git Bash (or detection failed)\n'
           fi
 
-          # LOCALAPPDATA is available; convert to POSIX for POSIX tools
-          printf 'LOCALAPPDATA (win):  %s\n' "${LOCALAPPDATA:-}"
-          posix_localappdata="$(cygpath --unix "${LOCALAPPDATA:-}")"
-          printf 'LOCALAPPDATA (posix): %s\n' "${posix_localappdata}"
+      - name: Bash (Git Bash) — edit pnpm rc
+        shell: bash
+        run: |
+          # # LOCALAPPDATA is available; convert to POSIX for POSIX tools
+          # printf 'LOCALAPPDATA (win):  %s\n' "${LOCALAPPDATA:-}"
+          # posix_localappdata="$(cygpath --unix "${LOCALAPPDATA:-}")"
+          # printf 'LOCALAPPDATA (posix): %s\n' "${posix_localappdata}"
 
-          rc="${posix_localappdata}/pnpm/config/rc"
-          mkdir --parents "$(dirname "$rc")"
-          touch "$rc"
+          # rc="${posix_localappdata}/pnpm/config/rc"
+          # mkdir --parents "$(dirname "$rc")"
+          # touch "$rc"
 
-          printf '=== Before ===\n'
-          cat "$rc" || true
+          # printf '=== Before ===\n'
+          # cat "$rc" || true
 
-          perl -i -pe '$exists ||= /^minimum-release-age-exclude\[\]=eslint-config-upleveled$/; END { print "minimum-release-age-exclude[]=eslint-config-upleveled\n" unless $exists }' "$rc"
+          # perl -i -pe '$exists ||= /^minimum-release-age-exclude\[\]=eslint-config-upleveled$/; END { print "minimum-release-age-exclude[]=eslint-config-upleveled\n" unless $exists }' "$rc"
 
-          printf '=== After ===\n'
-          cat "$rc"
+          # printf '=== After ===\n'
+          # cat "$rc"
+
+          perl -i -ne 'print; $exists ||= /^minimum-release-age-exclude\[\]=eslint-config-upleveled\r?$/; END { print "minimum-release-age-exclude[]=eslint-config-upleveled\n" unless $exists }' "$LOCALAPPDATA/pnpm/config/rc"
+
+          printf '=== After writing ===\n'
+          cat "$LOCALAPPDATA/pnpm/config/rc"
 
       - name: Echo with newline tests (Git Bash)
         shell: bash
