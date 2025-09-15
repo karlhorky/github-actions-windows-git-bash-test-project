@@ -84,6 +84,7 @@ jobs:
           # printf '=== After ===\n'
           # cat "$rc"
 
+          pnpm config set minimumReleaseAge 10080 --global
           printf '=== debugging ===\n'
           ls "$LOCALAPPDATA/pnpm/config/rc"
           cat "$LOCALAPPDATA/pnpm/config/rc"
