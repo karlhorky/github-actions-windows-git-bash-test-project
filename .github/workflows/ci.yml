@@ -6,6 +6,7 @@ jobs:
     name: CI
     runs-on: windows-latest
     steps:
+      - uses: pnpm/action-setup@v4
       - name: Default shell (PowerShell) — show env + edit pnpm rc
         run: |
           Write-Host "=== PowerShell env probe (default shell on windows-latest) ==="
