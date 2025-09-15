@@ -6,13 +6,84 @@ jobs:
     name: CI
     runs-on: windows-latest
     steps:
-      - name: Echo with \n
+      - name: Default shell (PowerShell) — show env + edit pnpm rc
+        run: |
+          Write-Host "=== PowerShell env probe (default shell on windows-latest) ==="
+          Write-Host ("OS={0}" -f $env:OS)
+          Write-Host ("OSTYPE={0}" -f $env:OSTYPE)
+          Write-Host ("MSYSTEM={0}" -f $env:MSYSTEM)
+          Write-Host ("SHELL={0}" -f $env:SHELL)
+          Write-Host ("LOCALAPPDATA={0}" -f $env:LOCALAPPDATA)
+          Write-Host "uname -s: " -NoNewline; & uname -s
+          Write-Host "uname -a: " -NoNewline; & uname -a
+
+          # Not Git Bash here; this is PowerShell
+          Write-Host "Detector: ✅ This step is PowerShell, not Git Bash"
+
+          # pnpm rc path on Windows
+          $rc = Join-Path $env:LOCALAPPDATA 'pnpm\config\rc'
+          New-Item -ItemType Directory -Force -Path (Split-Path $rc) | Out-Null
+          if (-not (Test-Path $rc)) { New-Item -ItemType File -Path $rc | Out-Null }
+
+          # Show file before/after
+          Write-Host "=== Before ==="
+          if (Test-Path $rc) { Get-Content $rc | ForEach-Object { Write-Host $_ } }
+
+          # Same Perl as you had, operating on the Windows path
+          perl -i -pe '$exists ||= /^minimum-release-age-exclude\[\]=eslint-config-upleveled$/; END { print "minimum-release-age-exclude[]=eslint-config-upleveled`n" unless $exists }' "$rc"
+
+          Write-Host "=== After ==="
+          Get-Content $rc | ForEach-Object { Write-Host $_ }
+
+      - name: Bash (Git Bash) — show env + edit pnpm rc
+        shell: bash
+        run: |
+          printf '=== Git Bash env probe ===\n'
+          printf '%s\n' \
+            "OS=${OS:-}" \
+            "OSTYPE=${OSTYPE:-}" \
+            "MSYSTEM=${MSYSTEM:-}" \
+            "SHELL=${SHELL:-}" \
+            "TERM=${TERM:-}" \
+            "LOCALAPPDATA=${LOCALAPPDATA:-}" \
+            "uname -s=$(uname -s)" \
+            "uname -a=$(uname -a)"
+
+          # Detector: true on Git Bash/MSYS
+          if [ "${OS:-}" = "Windows_NT" ] \
+            && [ "${OSTYPE:-}" = "msys" ] \
+            && [ -n "${MSYSTEM:-}" ] \
+            && uname -s | grep --ignore-case --extended-regexp --quiet '^(MINGW|MSYS)_NT'
+          then
+            printf 'Detector: ✅ Git Bash detected\n'
+          else
+            printf 'Detector: ❌ Not Git Bash (or detection failed)\n'
+          fi
+
+          # LOCALAPPDATA is available; convert to POSIX for POSIX tools
+          printf 'LOCALAPPDATA (win):  %s\n' "${LOCALAPPDATA:-}"
+          posix_localappdata="$(cygpath --unix "${LOCALAPPDATA:-}")"
+          printf 'LOCALAPPDATA (posix): %s\n' "${posix_localappdata}"
+
+          rc="${posix_localappdata}/pnpm/config/rc"
+          mkdir --parents "$(dirname "$rc")"
+          touch "$rc"
+
+          printf '=== Before ===\n'
+          cat "$rc" || true
+
+          perl -i -pe '$exists ||= /^minimum-release-age-exclude\[\]=eslint-config-upleveled$/; END { print "minimum-release-age-exclude[]=eslint-config-upleveled\n" unless $exists }' "$rc"
+
+          printf '=== After ===\n'
+          cat "$rc"
+
+      - name: Echo with newline tests (Git Bash)
         shell: bash
         run: |
           echo "abc\ndef"
-          echo -e "abc\ndef"
-          # printf "abc\ndef"
-          echo $SHELL
+          echo -- "-e is not portable; prefer printf"
+          printf 'abc\ndef\n'
+          printf 'SHELL=%s\n' "${SHELL:-}"
           curl --location --remote-name https://raw.githubusercontent.com/upleveled/expo-example-winter-2025-eu/main/metroRequire.d.ts
-          ls -al
+          ls --all --long
           cat metroRequire.d.ts
