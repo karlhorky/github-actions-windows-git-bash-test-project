@@ -21,15 +21,15 @@ jobs:
           printf '=== Edit pnpm rc (Git Bash) ===\n'
           pnpm config set minimumReleaseAge 10080 --global
           printf '=== debugging ===\n'
-          ls "$LOCALAPPDATA/pnpm/config/rc"
-          cat "$LOCALAPPDATA/pnpm/config/rc"
+          ls "$HOME/.config/pnpm/rc"
+          cat "$HOME/.config/pnpm/rc"
 
           printf '=== perl ===\n'
           perl -i -pe '$exists ||= /^minimum-release-age-exclude\[\]=eslint-config-upleveled\r?$/; $_ .= "minimum-release-age-exclude[]=eslint-config-upleveled\n" if eof && !$exists' "$HOME/.config/pnpm/rc"
           perl -i -pe '$exists ||= /^minimum-release-age-exclude\[\]=stylelint-config-upleveled\r?$/; $_ .= "minimum-release-age-exclude[]=stylelint-config-upleveled\n" if eof && !$exists' "$HOME/.config/pnpm/rc"
 
           printf '=== After writing ===\n'
-          cat "$LOCALAPPDATA/pnpm/config/rc"
+          cat "$HOME/.config/pnpm/rc"
 
           printf '=== Attempt install again (should fail)===\n'
           pnpm add @types/react@19.1.13
