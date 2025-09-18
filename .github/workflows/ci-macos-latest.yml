@@ -1,0 +1,35 @@
+name: CI
+on: push
+
+jobs:
+  ci:
+    name: CI
+    runs-on: macos-latest
+    steps:
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.17.0
+      - name: Bash (Git Bash) — edit pnpm rc
+        run: |
+          printf '=== init pnpm package.json===\n'
+          pnpm init
+
+          printf '=== Attempt install (should succeed)===\n'
+          pnpm add @types/react@19.1.13
+          pnpm remove @types/react
+
+          printf '=== Edit pnpm rc (Git Bash) ===\n'
+          pnpm config set minimumReleaseAge 10080 --global
+          printf '=== debugging ===\n'
+          ls "$LOCALAPPDATA/pnpm/config/rc"
+          cat "$LOCALAPPDATA/pnpm/config/rc"
+
+          printf '=== perl ===\n'
+          pnpm config set minimumReleaseAge 10080 --globalperl -i -pe '$exists ||= /^minimum-release-age-exclude\[\]=eslint-config-upleveled\r?$/; $_ .= "minimum-release-age-exclude[]=eslint-config-upleveled\n" if eof && !$exists' "$HOME/Library/Preferences/pnpm/rc"
+          perl -i -pe '$exists ||= /^minimum-release-age-exclude\[\]=stylelint-config-upleveled\r?$/; $_ .= "minimum-release-age-exclude[]=stylelint-config-upleveled\n" if eof && !$exists' "$HOME/Library/Preferences/pnpm/rc"
+
+          printf '=== After writing ===\n'
+          cat "$LOCALAPPDATA/pnpm/config/rc"
+
+          printf '=== Attempt install again (should fail)===\n'
+          pnpm add @types/react@19.1.13
