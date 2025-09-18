@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: pnpm/action-setup@v4
         with:
-          version: 10
+          version: 10.17.0
       - name: Default shell (PowerShell) — show env + edit pnpm rc
         run: |
           Write-Host "=== PowerShell env probe (default shell on windows-latest) ==="
@@ -87,6 +87,14 @@ jobs:
           # printf '=== After ===\n'
           # cat "$rc"
 
+          printf '=== init pnpm package.json===\n'
+          pnpm init
+
+          printf '=== Attempt install (should succeed)===\n'
+          pnpm add @types/react
+          pnpm remove @types/react
+
+          printf '=== Edit pnpm rc (Git Bash) ===\n'
           pnpm config set minimumReleaseAge 10080 --global
           printf '=== debugging ===\n'
           ls "$LOCALAPPDATA/pnpm/config/rc"
@@ -98,6 +106,9 @@ jobs:
 
           printf '=== After writing ===\n'
           cat "$LOCALAPPDATA/pnpm/config/rc"
+
+          printf '=== Attempt install again (should fail)===\n'
+          pnpm add @types/react
 
       - name: Echo with newline tests (Git Bash)
         shell: bash
