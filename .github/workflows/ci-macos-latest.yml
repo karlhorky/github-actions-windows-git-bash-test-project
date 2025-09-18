@@ -25,7 +25,7 @@ jobs:
           cat "$HOME/Library/Preferences/pnpm/rc"
 
           printf '=== perl ===\n'
-          pnpm config set minimumReleaseAge 10080 --globalperl -i -pe '$exists ||= /^minimum-release-age-exclude\[\]=eslint-config-upleveled\r?$/; $_ .= "minimum-release-age-exclude[]=eslint-config-upleveled\n" if eof && !$exists' "$HOME/Library/Preferences/pnpm/rc"
+          perl -i -pe '$exists ||= /^minimum-release-age-exclude\[\]=eslint-config-upleveled\r?$/; $_ .= "minimum-release-age-exclude[]=eslint-config-upleveled\n" if eof && !$exists' "$HOME/Library/Preferences/pnpm/rc"
           perl -i -pe '$exists ||= /^minimum-release-age-exclude\[\]=stylelint-config-upleveled\r?$/; $_ .= "minimum-release-age-exclude[]=stylelint-config-upleveled\n" if eof && !$exists' "$HOME/Library/Preferences/pnpm/rc"
 
           printf '=== After writing ===\n'
