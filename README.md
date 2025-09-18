@@ -1,4 +1,4 @@
-Git Bash is the default on GitHub Actions Windows runners using `windows-latest` and `shell: bash`:
+Git Bash is the default on GitHub Actions Windows runners using `runs-on: windows-latest` and `shell: bash`:
 
 > When specifying a bash shell on Windows, the bash shell included with Git for Windows is used.
 
