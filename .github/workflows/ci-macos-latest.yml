@@ -1,9 +1,9 @@
-name: CI
+name: CI - macos-latest
 on: push
 
 jobs:
   ci:
-    name: CI
+    name: CI - macos-latest
     runs-on: macos-latest
     steps:
       - uses: pnpm/action-setup@v4
