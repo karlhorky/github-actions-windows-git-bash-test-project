@@ -123,4 +123,5 @@ jobs:
           cat metroRequire.d.ts
           touch metroRequire.x
           ls -al metroRequire.{d.ts,x}
-          ls -al metroRequire.(d.ts|x)
+          # zsh only
+          # ls -al metroRequire.(d.ts|x)
