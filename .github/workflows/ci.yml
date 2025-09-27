@@ -121,3 +121,6 @@ jobs:
           curl --location --remote-name https://raw.githubusercontent.com/upleveled/expo-example-winter-2025-eu/main/metroRequire.d.ts
           ls -al
           cat metroRequire.d.ts
+          touch metroRequire.x
+          ls -al metroRequire.{d.ts,x}
+          ls -al metroRequire.(d.ts|x)
