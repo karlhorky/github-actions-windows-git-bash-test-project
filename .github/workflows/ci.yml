@@ -67,6 +67,14 @@ jobs:
             printf 'Detector: ❌ Not Git Bash (or detection failed)\n'
           fi
 
+      - name: Bash (Git Bash) — verify Corepack cache location
+        shell: bash
+        run: |
+          npx --yes corepack@0.34.5 pnpm@8.15.5 --version
+
+          printf '=== Corepack cache ===\n'
+          find "$LOCALAPPDATA/node/corepack" -maxdepth 3 -print
+
       - name: Bash (Git Bash) — edit pnpm rc
         shell: bash
         run: |
