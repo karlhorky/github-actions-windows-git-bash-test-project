@@ -70,6 +70,13 @@ jobs:
       - name: Bash (Git Bash) — verify Corepack cache location
         shell: bash
         run: |
+          corepack --version
+          printf 'LOCALAPPDATA=%s\n' "$LOCALAPPDATA"
+          find "$LOCALAPPDATA/node/corepack" -maxdepth 2 -print
+
+      - name: Bash (Git Bash) — verify Corepack cache location
+        shell: bash
+        run: |
           npx --yes corepack@0.34.5 pnpm@8.15.5 --version
 
           printf '=== Corepack cache ===\n'
