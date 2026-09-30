@@ -72,7 +72,7 @@ with tempfile.TemporaryDirectory(prefix='next-app-prompts-') as temporary:
     mock = root / 'mock-pnpm.sh'
     mock.write_text('printf "%s\\n" "$@" > arguments.txt\nexit "${MOCK_EXIT:-0}"\n', encoding='utf-8')
     for answers in [*itertools.product(['n', 'y'], repeat=2), ('', ''), ('Y', 'Y')]:
-        name = 'mock-' + '-'.join(answer or 'enter' for answer in answers)
+        name = 'mock-uppercase' if answers == ('Y', 'Y') else 'mock-' + '-'.join(answer or 'enter' for answer in answers)
         directory = root / name
         directory.mkdir()
         command_arguments = ['bash', mock.as_posix(), *arguments[1:]]
