@@ -22,7 +22,7 @@ output_directory.mkdir()
 
 def run_case(name, directory, command_arguments, answers, timeout=30):
     command = shlex.join(['bash', '-ec', wrapper, '_', *command_arguments])
-    script = directory / 'run.sh'
+    script = directory.parent / f'{name}.sh'
     script.write_text(command + '\n', encoding='utf-8')
     print(f'COMMAND {name}: {command}', flush=True)
     process = PtyProcess.spawn(
